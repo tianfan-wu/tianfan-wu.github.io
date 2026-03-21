@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tianfan (Jaycee) Wu — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-card: #16161f;
+  --bg-card-hover: #1c1c28;
+  --accent: #00e5a0;
+  --accent-dim: rgba(0, 229, 160, 0.12);
+  --accent-glow: rgba(0, 229, 160, 0.25);
+  --text-primary: #e8e8ed;
+  --text-secondary: #8a8a9a;
+  --text-muted: #55556a;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(0, 229, 160, 0.2);
+  --gradient-1: linear-gradient(135deg, #00e5a0, #00b4d8);
+  --gradient-2: linear-gradient(135deg, #0a0a0f 0%, #111118 100%);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.nav-hamburger span {
+  width: 24px;
+  height: 2px;
+  background: var(--text-secondary);
+  transition: all 0.3s;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(1.5rem, 8vw, 10rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(100px);
+  opacity: 0.4;
+  animation: pulse 8s ease-in-out infinite alternate;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0,180,216,0.15) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: pulse 10s ease-in-out 2s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.3; }
+  to   { transform: scale(1.15); opacity: 0.5; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.hero h1 .accent-line {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hero-tech-strip {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1s forwards;
+}
+
+.tech-chip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.35rem 0.8rem;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  letter-spacing: 0.04em;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTION LAYOUT ─── */
+section {
+  padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 8vw, 10rem);
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+/* ─── ABOUT ─── */
+#about {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-text {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.about-text p + p { margin-top: 1.2rem; }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.stat-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-3px);
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+
+/* ─── EXPERIENCE ─── */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), var(--border));
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 3.5rem 2.5rem;
+}
+
+.timeline-item:last-child { padding-bottom: 0; }
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2.45rem;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-role {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.timeline-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.timeline-company {
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.timeline-bullets {
+  list-style: none;
+}
+
+.timeline-bullets li {
+  position: relative;
+  padding-left: 1.2rem;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-bullets li::before {
+  content: '▹';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.timeline-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.timeline-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.6rem;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  letter-spacing: 0.03em;
+}
+
+/* ─── EDUCATION ─── */
+#education { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.edu-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.edu-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  transition: all 0.3s;
+}
+
+.edu-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+}
+
+.edu-school {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.edu-degree {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+.edu-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+.edu-meta {
+  text-align: right;
+}
+
+.edu-gpa {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.edu-dates {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 0.3rem;
+}
+
+/* ─── PROJECTS ─── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.project-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.project-card:hover::before { transform: scaleX(1); }
+
+.project-icon {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.project-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+.project-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.project-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.6rem;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+}
+
+/* ─── ARTIFACTS ─── */
+#artifacts { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.artifacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.artifact-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: all 0.4s;
+  position: relative;
+}
+
+.artifact-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.artifact-type {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
+}
+
+.artifact-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.artifact-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+.artifact-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s;
+}
+
+.artifact-link:hover { opacity: 0.7; }
+
+.artifact-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.artifact-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(0,180,216,0.1);
+  color: #00b4d8;
+  border: 1px solid rgba(0,180,216,0.2);
+}
+
+/* ─── SKILLS ─── */
+.skills-strip {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* ─── CONTACT ─── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.contact-text {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.contact-links {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.contact-item:hover {
+  border-color: var(--border-accent);
+  transform: translateX(6px);
+}
+
+.contact-item-icon {
+  font-size: 1.2rem;
+}
+
+.contact-item-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.contact-item-value {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin-top: 0.15rem;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 2.5rem clamp(1.5rem, 8vw, 10rem);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+footer a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer a:hover { color: var(--accent); }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,15,0.96);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .projects-grid, .artifacts-grid { grid-template-columns: 1fr; }
+  .edu-card { grid-template-columns: 1fr; }
+  .edu-meta { text-align: left; }
+  .hero { padding: 0 1.5rem; }
+  section { padding: 4rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="#home" class="nav-logo">JW</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#artifacts">Artifacts</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-label">Data Analytics · AI/ML · Intelligent Systems</div>
+    <h1>Tianfan (Jaycee)<br><span class="accent-line">Wu</span></h1>
+    <p class="hero-desc">
+      Data scientist and AI/ML practitioner building ethical, people-centered intelligent systems.
+      From credit model validation at Fitch Ratings to machine learning research — bridging analytics, engineering, and purpose.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View Projects ↓</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+    <div class="hero-tech-strip">
+      <span class="tech-chip">Python</span>
+      <span class="tech-chip">R</span>
+      <span class="tech-chip">SQL</span>
+      <span class="tech-chip">AWS</span>
+      <span class="tech-chip">Power BI</span>
+      <span class="tech-chip">Tableau</span>
+      <span class="tech-chip">MongoDB</span>
+      <span class="tech-chip">Spark</span>
+      <span class="tech-chip">VBA</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="section-label">01 — About</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm a data scientist with experience spanning financial services, entertainment consulting, and environmental analytics.
+        Currently a Senior Analyst at Fitch Ratings, I independently validate credit models across RMBS, CMBS, and Corporate sectors
+        — building automated analytical workflows and custom tooling with Python and VBA.
+      </p>
+      <p>
+        I hold a Master of Science in Applied Analytics from Columbia University and am currently deepening my expertise in AI/ML
+        through Indiana Wesleyan University's graduate program. I'm passionate about building responsible, people-centered
+        technology solutions that deliver real business impact.
+      </p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Credit Models Validated</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3.99</div>
+        <div class="stat-label">Columbia GPA</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">KPIs Visualized</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4+</div>
+        <div class="stat-label">Industries Served</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXPERIENCE ─── -->
+<section id="experience">
+  <div class="section-label">02 — Experience</div>
+  <h2 class="section-title">Where I've Worked</h2>
+  <div class="timeline">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <span class="timeline-role">Senior Analyst — Model Validation Group</span>
+        <span class="timeline-date">Feb 2023 – Present</span>
+      </div>
+      <div class="timeline-company">Fitch Ratings · New York, US</div>
+      <ul class="timeline-bullets">
+        <li>Independently validated 15+ credit models across RMBS, CMBS, and Corporate sectors covering cash flows, default, and statistical components.</li>
+        <li>Developed automated analytical workflows to store and compare model outputs across portfolios, enabling consistent risk assessment and stress analysis.</li>
+        <li>Built custom analytical tools and automation using Python and VBA to improve efficiency and consistency of model review processes.</li>
+        <li>Perform stress tests on key model outputs and develop benchmark models to explore alternative factors and methodologies.</li>
+        <li>Contributed to an internal AI Chatbot project using LLM, improving operational team service efficiency.</li>
+      </ul>
+      <div class="timeline-tags">
+        <span>Python</span><span>R</span><span>VBA</span><span>Excel</span><span>AWS</span><span>LLM</span>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <span class="timeline-role">Data Science Intern</span>
+        <span class="timeline-date">May 2022 – Aug 2022</span>
+      </div>
+      <div class="timeline-company">Psyop Production, LLC · Los Angeles, US</div>
+      <ul class="timeline-bullets">
+        <li>Backed up a 1TB+ operational database and designed ETL data pipelines, automating data refresh for 10K+ bids/week — saving 30+ hours monthly.</li>
+        <li>Visualized 50+ KPIs across 4 dashboards (30+ pages) partnering with 8 cross-functional stakeholders on sales, scheduling, and utilization tracking.</li>
+        <li>Automated operating financial models to simulate 5 offices' operation scenarios over 3 years, identifying expense-saving opportunities.</li>
+      </ul>
+      <div class="timeline-tags">
+        <span>AWS</span><span>Python</span><span>MySQL</span><span>Google Data Studio</span><span>Excel</span>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <span class="timeline-role">Market Analyst Intern</span>
+        <span class="timeline-date">Nov 2021 – Feb 2022</span>
+      </div>
+      <div class="timeline-company">Daxue Consulting · Remote</div>
+      <ul class="timeline-bullets">
+        <li>Performed NLP on 9K+ customer reviews, summarizing 60+ keywords, identifying market trends and developing product optimization strategies.</li>
+        <li>Conducted A/B tests to verify push notification strategies, resulting in a 3% lift in app engagement rate.</li>
+        <li>Built 2 ML models (XGBoost, Factor Analysis, PCA) capturing customer purchasing patterns — improving loyalty conversion rate by 15%.</li>
+      </ul>
+      <div class="timeline-tags">
+        <span>R</span><span>NLP</span><span>XGBoost</span><span>PCA</span><span>A/B Testing</span>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <span class="timeline-role">Financial Analyst Intern</span>
+        <span class="timeline-date">Jul 2021 – Aug 2021</span>
+      </div>
+      <div class="timeline-company">China Construction Bank · Wuhan, China</div>
+      <ul class="timeline-bullets">
+        <li>Managed daily OCF data and calculated financing ratios to prevent loan defaults and fraud risk — helping the bank avoid $2M+ financial loss.</li>
+        <li>Automated an Excel dashboard to track marketing campaign performance and QA inventory management, saving $3K+ in monthly expenses.</li>
+      </ul>
+      <div class="timeline-tags">
+        <span>MySQL</span><span>Excel</span><span>Risk Analysis</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── EDUCATION ─── -->
+<section id="education">
+  <div class="section-label">03 — Education</div>
+  <h2 class="section-title">Academic Background</h2>
+  <div class="edu-grid">
+
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">Columbia University</div>
+        <div class="edu-degree">M.S. in Applied Analytics</div>
+        <div class="edu-detail">Data Frameworks (R), SQL, Python for Data Analysis, Managing Data (MongoDB, Spark)</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-gpa">3.99</div>
+        <div class="edu-dates">Sep 2021 – Dec 2022</div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">Indiana Wesleyan University</div>
+        <div class="edu-degree">Graduate Program — AI/ML</div>
+        <div class="edu-detail">AIML-500: Machine Learning Fundamentals — currently enrolled</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-gpa">—</div>
+        <div class="edu-dates">In Progress</div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">University of California, Davis</div>
+        <div class="edu-degree">Academic Exchange Program</div>
+        <div class="edu-detail">Exchange semester broadening analytical and cross-cultural academic experience.</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-gpa">3.88</div>
+        <div class="edu-dates">Sep 2020 – Dec 2020</div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">Wuhan University of Technology</div>
+        <div class="edu-degree">B.S. in Financial Management</div>
+        <div class="edu-detail">Foundation in quantitative finance, statistics, and economic analysis.</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-gpa">3.74</div>
+        <div class="edu-dates">Sep 2017 – Jun 2021</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── PROJECTS ─── -->
+<section id="projects">
+  <div class="section-label">04 — Projects</div>
+  <h2 class="section-title">Selected Work</h2>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-icon">🌊</div>
+      <div class="project-title">GHD Capstone — Groundwater Sustainability</div>
+      <p class="project-desc">
+        Preprocessed historical groundwater data in California with outlier detection, imputation, and feature transformation.
+        Trained LSTM & Prophet models to predict groundwater elevations and identify minimum thresholds for 10K+ wells.
+        Built Tableau dashboards visualizing correlations with rainfall and population.
+      </p>
+      <div class="project-tags">
+        <span>Python</span><span>LSTM</span><span>Prophet</span><span>Tableau</span><span>Time Series</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🎵</div>
+      <div class="project-title">Cruise Music Festival — Data Management & App</div>
+      <p class="project-desc">
+        Scraped 3K+ data points from Yelp, built an ETL pipeline for semi-structured JSON data.
+        Developed a full-stack R Shiny App with CSS/HTML featuring an artist gallery, cruise map,
+        ticket system, appointment booking, and custom data filtering for trip planning.
+      </p>
+      <div class="project-tags">
+        <span>R Shiny</span><span>ETL</span><span>Yelp API</span><span>CSS/HTML</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🤖</div>
+      <div class="project-title">WellnessGuide — AI Wellness Chatbot</div>
+      <p class="project-desc">
+        Designed a wellness chatbot using design thinking principles, built as a standalone HTML application
+        powered by the Anthropic API. Focused on accessible, user-centered interaction for mental health support.
+      </p>
+      <div class="project-tags">
+        <span>Anthropic API</span><span>HTML/JS</span><span>Design Thinking</span><span>AI/ML</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">📚</div>
+      <div class="project-title">StudyBuddy AI — Group Presentation</div>
+      <p class="project-desc">
+        Co-developed an AI-powered academic learning assistant concept with a seven-person team.
+        Focused on personalized study recommendations, adaptive quizzing, and collaborative learning features.
+      </p>
+      <div class="project-tags">
+        <span>AI/ML</span><span>UX Research</span><span>Team Project</span><span>EdTech</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── ARTIFACTS ─── -->
+<section id="artifacts">
+  <div class="section-label">05 — Artifacts</div>
+  <h2 class="section-title">AI/ML Showcases</h2>
+  <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px;">
+    Interactive explorations, visual analyses, and AI-driven artifacts from coursework and independent research.
+    <em style="color: var(--text-muted);">Links and demos coming soon.</em>
+  </p>
+  <div class="artifacts-grid">
+
+    <div class="artifact-card reveal">
+      <div class="artifact-type">Analysis</div>
+      <div class="artifact-title">ML vs. Deep Learning — Case Study Analysis</div>
+      <p class="artifact-desc">
+        Written analysis using SVM, CNN, and DRL case studies to compare machine learning and deep learning approaches
+        across real-world application domains.
+      </p>
+      <div class="artifact-tags">
+        <span>SVM</span><span>CNN</span><span>DRL</span><span>Case Study</span>
+      </div>
+    </div>
+
+    <div class="artifact-card reveal">
+      <div class="artifact-type">Reflection</div>
+      <div class="artifact-title">Faith & AI Ethics — Academic Reflections</div>
+      <p class="artifact-desc">
+        A series of reflections integrating themes of faith, ethical AI development, people-centered leadership,
+        and stewardship within the AI/ML field.
+      </p>
+      <div class="artifact-tags">
+        <span>Ethics</span><span>Leadership</span><span>AI Governance</span>
+      </div>
+    </div>
+
+    <div class="artifact-card reveal">
+      <div class="artifact-type">Application</div>
+      <div class="artifact-title">WellnessGuide Chatbot — Design Thinking Build</div>
+      <p class="artifact-desc">
+        A standalone HTML wellness chatbot built via the Anthropic API using design thinking principles —
+        from empathy mapping through prototyping and testing.
+      </p>
+      <div class="artifact-tags">
+        <span>Anthropic API</span><span>Design Thinking</span><span>HTML</span>
+      </div>
+    </div>
+
+    <div class="artifact-card reveal">
+      <div class="artifact-type">Presentation</div>
+      <div class="artifact-title">StudyBuddy AI — Team Concept</div>
+      <p class="artifact-desc">
+        A collaborative presentation developing an AI-powered academic assistant concept,
+        combining adaptive learning, personalized recommendations, and group study tools.
+      </p>
+      <div class="artifact-tags">
+        <span>EdTech</span><span>AI</span><span>Collaboration</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-label">06 — Contact</div>
+  <h2 class="section-title">Let's Connect</h2>
+  <div class="contact-grid">
+    <div class="contact-text">
+      <p>
+        I'm always open to conversations about data science, AI/ML, ethical technology,
+        or collaboration opportunities. Reach out anytime.
+      </p>
+    </div>
+    <div class="contact-links">
+      <a class="contact-item" href="mailto:tianfan2330@gmail.com">
+        <span class="contact-item-icon">✉</span>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-value">tianfan2330@gmail.com</div>
+        </div>
+      </a>
+      <a class="contact-item" href="tel:+12063086557">
+        <span class="contact-item-icon">☎</span>
+        <div>
+          <div class="contact-item-label">Phone</div>
+          <div class="contact-item-value">206-308-6557</div>
+        </div>
+      </a>
+      <a class="contact-item" href="https://www.linkedin.com/in/tianfanwu" target="_blank">
+        <span class="contact-item-icon">▦</span>
+        <div>
+          <div class="contact-item-label">LinkedIn</div>
+          <div class="contact-item-value">linkedin.com/in/tianfanwu</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span>© 2026 Tianfan (Jaycee) Wu</span>
+  <a href="#home">↑ Back to top</a>
+</footer>
+
+<!-- ─── JS ─── -->
+<script>
+// Mobile nav toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
