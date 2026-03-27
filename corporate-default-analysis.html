@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Default Loss Analysis — Jaycee Wu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1628;
+  --deep: #0F2240;
+  --accent: #3B82F6;
+  --accent-light: #60A5FA;
+  --accent-glow: rgba(59,130,246,0.15);
+  --teal: #14B8A6;
+  --red: #EF4444;
+  --amber: #F59E0B;
+  --surface: #111C32;
+  --surface2: #162040;
+  --border: rgba(255,255,255,0.06);
+  --text: #E2E8F0;
+  --text-dim: #94A3B8;
+  --text-bright: #F8FAFC;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--navy);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: white; }
+
+/* ---- NAV ---- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,22,40,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+nav .inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+nav a {
+  color: var(--text-dim); text-decoration: none; font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.02em; transition: color 0.2s;
+}
+nav a:hover { color: var(--accent-light); }
+nav .back { display: flex; align-items: center; gap: 6px; }
+nav .back svg { width: 16px; height: 16px; }
+nav .links { display: flex; gap: 1.8rem; }
+
+/* ---- HERO ---- */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -40%; left: -20%; width: 140%; height: 140%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(20,184,166,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero .label {
+  font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent-light);
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+}
+.hero h1 {
+  font-family: var(--serif); font-size: clamp(2.4rem, 5vw, 3.8rem);
+  color: var(--text-bright); line-height: 1.15;
+  max-width: 800px; margin-bottom: 1.2rem;
+  opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+}
+.hero .subtitle {
+  font-size: 1.15rem; color: var(--text-dim); max-width: 600px;
+  margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards;
+}
+.hero .tags {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+  opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards;
+}
+.hero .tags span {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em;
+  padding: 0.35rem 0.85rem; border-radius: 100px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+/* ---- METRIC STRIP ---- */
+.metrics {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  max-width: 900px; margin: -2rem auto 0; padding: 0 2rem;
+  position: relative; z-index: 2;
+  opacity: 0; animation: fadeUp 0.8s ease 1s forwards;
+}
+.metric-card {
+  text-align: center; padding: 2rem 1rem;
+  border-right: 1px solid var(--border);
+}
+.metric-card:last-child { border-right: none; }
+.metric-card .value {
+  font-family: var(--serif); font-size: 2rem; color: var(--accent-light);
+  margin-bottom: 0.3rem;
+}
+.metric-card .desc {
+  font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---- SECTIONS ---- */
+section {
+  max-width: 820px; margin: 0 auto;
+  padding: 5rem 2rem;
+}
+section.wide { max-width: 1000px; }
+
+.section-label {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+section h2 {
+  font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--text-bright); margin-bottom: 1.5rem; line-height: 1.25;
+}
+section h3 {
+  font-size: 1.1rem; font-weight: 600; color: var(--text-bright);
+  margin: 2rem 0 0.8rem;
+}
+section p {
+  color: var(--text); margin-bottom: 1.2rem; font-size: 1rem;
+}
+section p.dim { color: var(--text-dim); }
+
+/* ---- DIVIDER ---- */
+.divider {
+  max-width: 820px; margin: 0 auto; padding: 0 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---- DATA CARD ---- */
+.data-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+}
+.data-card table {
+  width: 100%; border-collapse: collapse;
+}
+.data-card th {
+  text-align: left; font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.data-card td {
+  padding: 0.6rem 0; font-size: 0.92rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.data-card td:first-child { color: var(--text-dim); width: 35%; }
+
+/* ---- PIPELINE ---- */
+.pipeline {
+  display: flex; align-items: stretch; gap: 0;
+  margin: 2rem 0; overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.pipeline-step {
+  flex: 1; min-width: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.5rem 1.2rem;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+}
+.pipeline-step:first-child { border-radius: 12px 0 0 12px; }
+.pipeline-step:last-child { border-radius: 0 12px 12px 0; }
+.pipeline-step:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+.pipeline-step .step-num {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--accent); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 0.6rem;
+}
+.pipeline-step h4 {
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--text-bright); margin-bottom: 0.5rem;
+}
+.pipeline-step p {
+  font-size: 0.8rem; color: var(--text-dim); line-height: 1.5;
+  margin-bottom: 0;
+}
+.pipeline-step::after {
+  content: '→'; position: absolute;
+  right: -12px; top: 50%; transform: translateY(-50%);
+  color: var(--accent); font-size: 1.2rem; z-index: 2;
+}
+.pipeline-step:last-child::after { display: none; }
+
+/* ---- MODEL TABLE ---- */
+.model-table {
+  width: 100%; border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+.model-table th {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); padding: 0.8rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--accent);
+}
+.model-table td {
+  padding: 0.9rem 1rem; font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+}
+.model-table tr.best td {
+  background: var(--accent-glow);
+  font-weight: 600;
+}
+.model-table .badge {
+  font-family: var(--mono); font-size: 0.65rem;
+  background: var(--accent); color: white;
+  padding: 0.15rem 0.5rem; border-radius: 100px;
+  margin-left: 0.5rem; vertical-align: middle;
+}
+
+/* ---- FIGURE CONTAINER ---- */
+.fig-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: var(--surface);
+  padding: 0.5rem;
+}
+
+/* ---- FIGURE PLACEHOLDER ---- */
+.fig-placeholder {
+  background: var(--surface);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+}
+.fig-placeholder .icon {
+  font-size: 2.5rem; margin-bottom: 0.8rem; opacity: 0.4;
+}
+.fig-placeholder .caption {
+  font-family: var(--mono); font-size: 0.75rem;
+  color: var(--text-dim); letter-spacing: 0.04em;
+}
+.fig-placeholder .note {
+  font-size: 0.78rem; color: var(--text-dim);
+  margin-top: 0.4rem; font-style: italic;
+}
+
+/* ---- EL FORMULA ---- */
+.formula-box {
+  background: linear-gradient(135deg, var(--surface), var(--surface2));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 2rem 2.5rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+.formula-box .formula {
+  font-family: var(--serif); font-size: 1.6rem;
+  color: var(--text-bright); margin-bottom: 1rem;
+}
+.formula-box .vars {
+  display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
+}
+.formula-box .var-item {
+  text-align: center;
+}
+.formula-box .var-item .var-name {
+  font-family: var(--mono); font-size: 0.85rem; font-weight: 600;
+  color: var(--accent-light);
+}
+.formula-box .var-item .var-desc {
+  font-size: 0.78rem; color: var(--text-dim);
+}
+
+/* ---- SENSITIVITY TABLE ---- */
+.scenario-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  margin: 1.5rem 0;
+}
+.scenario-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.scenario-card:hover { border-color: var(--accent); }
+.scenario-card.stressed { border-color: rgba(239,68,68,0.3); }
+.scenario-card .scenario-label {
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 0.4rem;
+}
+.scenario-card .lgd-value {
+  font-family: var(--serif); font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+.scenario-card:nth-child(1) .lgd-value { color: var(--teal); }
+.scenario-card:nth-child(2) .lgd-value { color: var(--accent-light); }
+.scenario-card:nth-child(3) .lgd-value { color: var(--red); }
+.scenario-card .el-desc {
+  font-size: 0.82rem; color: var(--text-dim);
+}
+
+/* ---- ETHICS CALLOUT ---- */
+.ethics-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  margin: 1.5rem 0;
+}
+.ethics-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.ethics-item .ethics-icon {
+  font-size: 1.4rem; margin-bottom: 0.6rem;
+}
+.ethics-item h4 {
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--text-bright); margin-bottom: 0.4rem;
+}
+.ethics-item p {
+  font-size: 0.85rem; color: var(--text-dim);
+  line-height: 1.6; margin-bottom: 0;
+}
+
+/* ---- CTA ---- */
+.cta-section {
+  text-align: center;
+  padding: 4rem 2rem 6rem;
+}
+.cta-buttons {
+  display: flex; justify-content: center; gap: 1rem;
+  flex-wrap: wrap; margin-top: 1.5rem;
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0.85rem 1.8rem; border-radius: 100px;
+  text-decoration: none; font-size: 0.9rem; font-weight: 600;
+  transition: all 0.3s;
+}
+.cta-btn.primary {
+  background: var(--accent); color: white;
+}
+.cta-btn.primary:hover {
+  background: var(--accent-light);
+  box-shadow: 0 0 30px rgba(59,130,246,0.3);
+}
+.cta-btn.secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+}
+.cta-btn.secondary:hover {
+  border-color: var(--accent); color: var(--accent-light);
+}
+
+/* ---- FOOTER ---- */
+footer {
+  text-align: center; padding: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem; color: var(--text-dim);
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .pipeline { flex-direction: column; }
+  .pipeline-step { border-radius: 12px !important; }
+  .pipeline-step::after { display: none; }
+  .scenario-cards { grid-template-columns: 1fr; }
+  .ethics-grid { grid-template-columns: 1fr; }
+  nav .links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <a href="https://tianfan-wu.github.io/" class="back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to Portfolio
+    </a>
+    <div class="links">
+      <a href="#context">Context</a>
+      <a href="#data">Data</a>
+      <a href="#approach">Approach</a>
+      <a href="#results">Results</a>
+      <a href="#loss">Loss Analysis</a>
+      <a href="#ethics">Ethics</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="label">AIML-500 · Class Activity · Portfolio Project</div>
+  <h1>Corporate Default Loss Analysis</h1>
+  <p class="subtitle">Predicting bankruptcy across 8,971 U.S. public companies using ensemble ML, then translating predictions into expected portfolio losses with Basel II/III frameworks.</p>
+  <div class="tags">
+    <span>Python</span>
+    <span>Gradient Boosting</span>
+    <span>Random Forest</span>
+    <span>Logistic Regression</span>
+    <span>scikit-learn</span>
+    <span>Credit Risk</span>
+    <span>Expected Loss</span>
+  </div>
+</header>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric-card">
+    <div class="value">78,682</div>
+    <div class="desc">Firm-Year Observations</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">8,971</div>
+    <div class="desc">Public Companies</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">0.793</div>
+    <div class="desc">Best AUC-ROC</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">20yr</div>
+    <div class="desc">Time Span (1999–2018)</div>
+  </div>
+</div>
+
+<!-- CONTEXT -->
+<div class="divider"></div>
+<section id="context">
+  <div class="section-label">01 — Context</div>
+  <h2>Why Corporate Default Prediction Matters</h2>
+  <p>Corporate bankruptcy is a rare but high-impact event. Accurately predicting which firms will default is critical for credit analysts, portfolio managers, and regulators — it drives capital allocation, lending decisions, and systemic risk assessment.</p>
+  <p>Traditional statistical models like Altman's Z-Score provide a linear foundation, but machine learning methods can capture complex, non-linear relationships among financial indicators that conventional approaches miss.</p>
+  <p class="dim">This project bridges two worlds: ML classification and financial risk quantification. It goes beyond asking "will this firm default?" to answer "how much could we lose?" — using the industry-standard Expected Loss framework (PD × LGD × EAD) from Basel II/III.</p>
+</section>
+
+<!-- DATA -->
+<div class="divider"></div>
+<section id="data">
+  <div class="section-label">02 — Data</div>
+  <h2>American Bankruptcy Dataset</h2>
+  <p>Publicly available benchmark dataset from Lombardo et al. (2022), covering NYSE and NASDAQ listed companies. Bankruptcy is defined per SEC criteria: Chapter 11 reorganization or Chapter 7 liquidation.</p>
+
+  <div class="data-card">
+    <table>
+      <tr><th>Attribute</th><th>Detail</th></tr>
+      <tr><td>Source</td><td>sowide/bankruptcy_dataset (GitHub) · MDPI Future Internet 2022</td></tr>
+      <tr><td>Companies</td><td>8,971 public firms (NYSE & NASDAQ)</td></tr>
+      <tr><td>Time Period</td><td>1999 – 2018 (20 years)</td></tr>
+      <tr><td>Observations</td><td>78,682 firm-year records</td></tr>
+      <tr><td>Features</td><td>18 accounting variables (X1–X18) + SIC Division & Major Group</td></tr>
+      <tr><td>Target</td><td>Failed (1) vs. Alive (0) — based on Chapter 7/11 filing</td></tr>
+      <tr><td>Class Balance</td><td>6.63% overall failure rate (5,220 failures); 2.34% in test set</td></tr>
+      <tr><td>Splits</td><td>Train: 1999–2011 (55,927) · Val: 2012–2014 (10,473) · Test: 2015–2018 (12,282)</td></tr>
+    </table>
+  </div>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_02_temporal_defaults.png" alt="Corporate Default Rates Over Time 1999-2018" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 1 — Default rates peaked during 2001–2003 and declined steadily post-GFC, reaching 1.3% by 2018.</p>
+  </div>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_03_industry_defaults.png" alt="Default Rate by Industry" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 2 — Mining (18.1%) and Retail (10.3%) show the highest failure rates by SIC division.</p>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<div class="divider"></div>
+<section id="approach" class="wide">
+  <div class="section-label">03 — Approach</div>
+  <h2>End-to-End ML Pipeline</h2>
+
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="step-num">Phase 01</div>
+      <h4>EDA & Features</h4>
+      <p>Class distribution analysis, temporal trend visualization, correlation heatmaps, feature selection via ANOVA F-test.</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">Phase 02</div>
+      <h4>PD Modeling</h4>
+      <p>Logistic Regression, Gradient Boosting, Random Forest with class-balanced weights. Threshold tuning on validation set.</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">Phase 03</div>
+      <h4>Loss Analysis</h4>
+      <p>Expected Loss = PD × LGD × EAD. Sensitivity analysis across LGD scenarios. GFC backtest.</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">Phase 04</div>
+      <h4>Interpretability</h4>
+      <p>Feature importance ranking, calibration-by-decile analysis, sector fairness audit. Ethical AI reflection.</p>
+    </div>
+  </div>
+
+  <h3>Class Imbalance Strategy</h3>
+  <p>With only 2.34% failures in the test set, standard accuracy is meaningless — a naive model predicting "alive" for everything scores 97.7%. The pipeline uses class-balanced sample weighting, scale_pos_weight tuning, and optimized decision thresholds evaluated on Precision-Recall AUC — not just ROC. Thresholds were tuned on the 2012–2014 validation set to avoid data leakage.</p>
+</section>
+
+<!-- RESULTS -->
+<div class="divider"></div>
+<section id="results">
+  <div class="section-label">04 — Results</div>
+  <h2>Model Performance</h2>
+  <p>Three models compared on the held-out test set (2015–2018), respecting temporal ordering to prevent data leakage.</p>
+
+  <table class="model-table">
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>AUC-ROC</th>
+        <th>AUC-PR</th>
+        <th>F1-Score</th>
+        <th>Threshold</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Logistic Regression</td>
+        <td>0.7469</td><td>0.0829</td><td>0.1488</td><td>0.540</td>
+      </tr>
+      <tr class="best">
+        <td>Random Forest <span class="badge">BEST AUC</span></td>
+        <td>0.7925</td><td>0.1045</td><td>0.1368</td><td>0.490</td>
+      </tr>
+      <tr class="best">
+        <td>Gradient Boosting <span class="badge">BEST F1</span></td>
+        <td>0.7906</td><td>0.1221</td><td>0.1839</td><td>0.170</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="dim" style="font-size:0.85rem; font-style:italic;">Random Forest achieves the highest AUC-ROC (0.793), while Gradient Boosting leads on precision-recall (AUC-PR: 0.122) and F1 (0.184). The low absolute AUC-PR values reflect the extreme 2.34% failure rate in the test period — a significantly harder classification problem than the 7.9% training rate.</p>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_06_roc_pr_curves.png" alt="ROC and Precision-Recall Curves" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 3 — ROC and Precision-Recall curves across all three models. Random Forest and Gradient Boosting perform comparably.</p>
+  </div>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_07_confusion_matrices.png" alt="Confusion Matrices" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 4 — Confusion matrices showing the precision-recall tradeoff at each model's optimal threshold.</p>
+  </div>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_10_feature_importance.png" alt="Feature Importance" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 5 — Feature importance from Random Forest. X11, X12, and X15 are the strongest predictors of corporate default.</p>
+  </div>
+</section>
+
+<!-- LOSS ANALYSIS -->
+<div class="divider"></div>
+<section id="loss">
+  <div class="section-label">05 — Loss Analysis</div>
+  <h2>From Predictions to Portfolio Losses</h2>
+  <p>Translating PD predictions into financial risk metrics using the industry-standard Basel Expected Loss framework.</p>
+
+  <div class="formula-box">
+    <div class="formula">EL = PD × LGD × EAD</div>
+    <div class="vars">
+      <div class="var-item">
+        <div class="var-name">PD</div>
+        <div class="var-desc">Probability of Default<br>(model-predicted)</div>
+      </div>
+      <div class="var-item">
+        <div class="var-name">LGD</div>
+        <div class="var-desc">Loss Given Default<br>(45% Basel standard)</div>
+      </div>
+      <div class="var-item">
+        <div class="var-name">EAD</div>
+        <div class="var-desc">Exposure at Default<br>($100M per firm)</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>LGD Sensitivity Analysis</h3>
+  <div class="scenario-cards">
+    <div class="scenario-card">
+      <div class="scenario-label">Optimistic</div>
+      <div class="lgd-value">30%</div>
+      <div class="el-desc">Lower recovery friction<br>Portfolio EL: <strong>$123.4B</strong></div>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-label">Basel Standard</div>
+      <div class="lgd-value">45%</div>
+      <div class="el-desc">Senior unsecured debt<br>Portfolio EL: <strong>$185.1B</strong></div>
+    </div>
+    <div class="scenario-card stressed">
+      <div class="scenario-label">Stressed</div>
+      <div class="lgd-value">60%</div>
+      <div class="el-desc">Economic downturn<br>Portfolio EL: <strong>$246.8B</strong></div>
+    </div>
+  </div>
+  <p class="dim" style="font-size:0.85rem; font-style:italic;">Portfolio of 12,282 firms in the test set (2015–2018), each with assumed $100M exposure at default.</p>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_08_loss_distribution.png" alt="Expected Loss Distribution and Sensitivity Analysis" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 6 — Expected loss distribution per firm (left) and portfolio-level sensitivity to LGD assumptions (right).</p>
+  </div>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_09_backtest.png" alt="Backtest Predicted vs Actual Default Rates" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 7 — Backtest comparing model-predicted average PD against realized default rates in the test period (2015–2018).</p>
+  </div>
+</section>
+
+<!-- ETHICS -->
+<div class="divider"></div>
+<section id="ethics">
+  <div class="section-label">06 — Ethical AI & Stewardship</div>
+  <h2>Responsible Credit Risk Modeling</h2>
+  <p>ML models for credit risk carry real-world consequences. These predictions influence capital allocation and ultimately determine which companies receive financial support. A stewardship perspective demands we build these systems with care.</p>
+
+  <div class="fig-container" style="margin:1.5rem 0;">
+    <img src="fig_11_calibration_fairness.png" alt="Calibration and Sector Fairness Audit" style="width:100%; border-radius:12px; border:1px solid var(--border);">
+    <p class="dim" style="font-size:0.8rem; margin-top:0.5rem; text-align:center;">Figure 8 — Model calibration by PD decile (left) and sector-level fairness audit comparing actual vs. predicted default rates (right).</p>
+  </div>
+
+  <div class="ethics-grid">
+    <div class="ethics-item">
+      <div class="ethics-icon">🔍</div>
+      <h4>Transparency</h4>
+      <p>Feature importance analysis reveals X11, X12, and X15 as the top default predictors — every prediction can be traced back to specific financial drivers, not a black box.</p>
+    </div>
+    <div class="ethics-item">
+      <div class="ethics-icon">⚖️</div>
+      <h4>Sector Fairness</h4>
+      <p>Mining (18.1%) and Retail (10.3%) show drastically higher failure rates than Services (4.1%) or Construction (1.5%). The calibration audit checks whether the model's predictions align with actual rates across sectors.</p>
+    </div>
+    <div class="ethics-item">
+      <div class="ethics-icon">🤝</div>
+      <h4>Human Oversight</h4>
+      <p>ML should inform — not replace — human judgment. The EL framework anchors analysis quantitatively, but experienced analysts contextualize it.</p>
+    </div>
+    <div class="ethics-item">
+      <div class="ethics-icon">🌱</div>
+      <h4>Stewardship</h4>
+      <p>Predictive power carries responsibility. Models should enable early intervention and support, not just risk avoidance that leaves vulnerable entities without recourse.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="divider"></div>
+<div class="cta-section">
+  <div class="section-label">Code & Resources</div>
+  <h2 style="font-family:var(--serif);font-size:1.8rem;color:var(--text-bright);margin-bottom:0.5rem;">Explore the Full Analysis</h2>
+  <p style="color:var(--text-dim);max-width:500px;margin:0 auto;">The complete notebook, dataset instructions, and all visualizations are available on GitHub.</p>
+  <div class="cta-buttons">
+    <a href="#" class="cta-btn primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="https://tianfan-wu.github.io/" class="cta-btn secondary">
+      ← Back to Portfolio
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 Tianfan (Jaycee) Wu · AIML-500 Portfolio Project
+</footer>
+
+</body>
+</html>
