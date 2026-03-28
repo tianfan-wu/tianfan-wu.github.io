@@ -1079,6 +1079,20 @@ footer a:hover { color: var(--accent); }
       </div>
     </div>
 
+    <div class="project-card reveal">
+      <div class="project-icon">📉</div>
+      <div class="project-title">Corporate Default &amp; Loss Analysis</div>
+      <p class="project-desc">
+        Built predictive models for corporate bankruptcy using the American Bankruptcy Dataset (Lombardo et al., 2022).
+        Trained Logistic Regression, Random Forest, and Gradient Boosting classifiers with temporal train/val/test splits.
+        Produced publication-quality figures analyzing default patterns, loss distributions, and feature importance across industries.
+      </p>
+      <div class="project-tags">
+        <span>Python</span><span>Scikit-learn</span><span>Logistic Regression</span><span>Random Forest</span><span>Gradient Boosting</span>
+      </div>
+      <a href="projects/corporate-default-loss/index.html" class="artifact-link" style="display:inline-block;margin-top:1rem;">View Case Study →</a>
+    </div>
+
   </div>
 </section>
 
@@ -1140,6 +1154,19 @@ footer a:hover { color: var(--accent); }
       </div>
     </div>
 
+    <div class="artifact-card reveal">
+      <div class="artifact-type">Case Study</div>
+      <div class="artifact-title">Corporate Default &amp; Loss Analysis</div>
+      <p class="artifact-desc">
+        End-to-end ML case study predicting corporate bankruptcy using Logistic Regression, Random Forest, and Gradient Boosting
+        with temporal splits. Features publication-quality visualizations of default patterns and loss distributions.
+      </p>
+      <div class="artifact-tags">
+        <span>Scikit-learn</span><span>Classification</span><span>Financial Risk</span><span>EDA</span>
+      </div>
+      <a href="projects/corporate-default-loss/index.html" class="artifact-link" style="margin-top:1rem;display:inline-block;">View Case Study →</a>
+    </div>
+
   </div>
 </section>
 
@@ -1155,11 +1182,11 @@ footer a:hover { color: var(--accent); }
       </p>
     </div>
     <div class="contact-links">
-      <a class="contact-item" href="mailto:tianfan2330@gmail.com">
+      <a class="contact-item" href="mailto:tianfanwu@outlook.com">
         <span class="contact-item-icon">✉</span>
         <div>
           <div class="contact-item-label">Email</div>
-          <div class="contact-item-value">tianfan2330@gmail.com</div>
+          <div class="contact-item-value">tianfanwu@outlook.com</div>
         </div>
       </a>
       <a class="contact-item" href="tel:+12063086557">
@@ -1207,8 +1234,8 @@ const observer = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.15 });
+
 reveals.forEach(el => observer.observe(el));
 </script>
-
 </body>
 </html>
