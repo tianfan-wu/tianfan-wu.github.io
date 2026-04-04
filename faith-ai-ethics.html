@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faith & AI Ethics — Tianfan (Jaycee) Wu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-card: #16161f;
+  --bg-card-hover: #1c1c28;
+  --accent: #00e5a0;
+  --accent-dim: rgba(0, 229, 160, 0.12);
+  --accent-glow: rgba(0, 229, 160, 0.25);
+  --text-primary: #e8e8ed;
+  --text-secondary: #8a8a9a;
+  --text-muted: #55556a;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(0, 229, 160, 0.2);
+  --gradient-1: linear-gradient(135deg, #00e5a0, #00b4d8);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--accent); }
+.nav-links a.active::after { width: 100%; }
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.nav-hamburger span {
+  width: 24px;
+  height: 2px;
+  background: var(--text-secondary);
+  transition: all 0.3s;
+}
+
+/* ─── SECTION LAYOUT ─── */
+section {
+  padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 8vw, 10rem);
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+/* ─── PAGE HERO ─── */
+.page-hero {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 8vw, 10rem) clamp(3rem, 5vw, 5rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(100px);
+  opacity: 0.3;
+  animation: pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.3; }
+  to   { transform: scale(1.15); opacity: 0.5; }
+}
+
+.page-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.page-hero-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.page-hero h1 .accent-line {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.75;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SCRIPTURE BLOCK ─── */
+.scripture-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.scripture-block {
+  border-left: 2px solid var(--accent);
+  padding: 1.5rem 2rem;
+  background: var(--accent-dim);
+  max-width: 640px;
+}
+
+.scripture-block p {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.scripture-block cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ─── TOPIC CARDS ─── */
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.topic-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.topic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.topic-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.topic-card:hover::before { transform: scaleX(1); }
+
+.topic-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.topic-type {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
+}
+
+.topic-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.topic-body {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.75;
+}
+
+.topic-body strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.topic-body em {
+  color: var(--text-secondary);
+}
+
+.topic-reflection {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.75;
+}
+
+.topic-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.topic-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(0,180,216,0.1);
+  color: #00b4d8;
+  border: 1px solid rgba(0,180,216,0.2);
+}
+
+/* ─── CLOSING CARD ─── */
+.closing-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.closing-card {
+  padding: 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  max-width: 720px;
+}
+
+.closing-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.closing-card p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.closing-card p + p { margin-top: 1rem; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: opacity 0.3s;
+}
+
+.back-link:hover { opacity: 0.7; }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 2.5rem clamp(1.5rem, 8vw, 10rem);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+footer a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer a:hover { color: var(--accent); }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,15,0.96);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-hero { padding-left: 1.5rem; padding-right: 1.5rem; }
+  section { padding: 4rem 1.5rem; }
+  .topics-grid { grid-template-columns: 1fr; }
+  .topic-card.full-width { grid-column: auto; }
+  .closing-card { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">JW</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#experience">Experience</a></li>
+    <li><a href="index.html#artifacts">Artifacts</a></li>
+    <li><a href="faith-ai-ethics.html" class="active">Faith & AI</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── PAGE HERO ─── -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="page-hero-label">Academic Reflections</div>
+    <h1>Faith &amp; <span class="accent-line">AI Ethics</span></h1>
+    <p class="page-hero-desc">
+      Exploring the intersection of faith-based values, human dignity, and the responsible development of artificial intelligence — informed by scripture, scholarship, and professional experience in financial services.
+    </p>
+  </div>
+</section>
+
+<!-- ─── SCRIPTURE ─── -->
+<section class="scripture-section">
+  <div class="scripture-block reveal">
+    <p>"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."</p>
+    <cite>— Ephesians 2:10 (NIV)</cite>
+  </div>
+</section>
+
+<!-- ─── TOPICS ─── -->
+<section>
+  <div class="section-label">Current Discourse — 2025 / 2026</div>
+  <h2 class="section-title">Hot Topics in Faith &amp; AI</h2>
+  <div class="topics-grid">
+
+    <!-- Card 1 -->
+    <div class="topic-card reveal">
+      <div class="topic-type">Pastoral Authority</div>
+      <div class="topic-title">AI as Spiritual Advisor</div>
+      <div class="topic-body">
+        Recent research from Barna Group (2026) reveals that nearly <strong>one in three U.S. adults</strong> consider AI-generated spiritual advice as trustworthy as guidance from a pastor. Faith-themed chatbots now exist across traditions — from Catholic AI models to tools like Quran GPT and AI rabbis. This raises urgent questions about the nature of spiritual authority, the role of embodied community in faith formation, and whether algorithms can meaningfully engage with the sacred.
+      </div>
+      <div class="topic-reflection">
+        Reflection: Spiritual wisdom requires relational context — the shepherd knows the sheep. AI can inform, but it cannot know a soul. The question is not whether AI can advise, but whether we allow convenience to replace covenant.
+      </div>
+      <div class="topic-tags">
+        <span>Barna 2026</span><span>Pastoral Care</span><span>LLMs</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="topic-card reveal">
+      <div class="topic-type">Theological Anthropology</div>
+      <div class="topic-title">Imago Dei &amp; Machine Intelligence</div>
+      <div class="topic-body">
+        As AI systems demonstrate increasingly sophisticated reasoning and creativity, the theological concept of <strong>Imago Dei</strong> — that humans are uniquely made in the image of God — becomes a critical anchor. The Vatican's 2025 document <em>Antiqua Et Nova</em> and Notre Dame's DELTA framework both affirm that human dignity is not diminished by machine capability. True intelligence, in this view, is inseparable from moral agency, conscience, and the capacity for love.
+      </div>
+      <div class="topic-reflection">
+        Reflection: Machines process; humans discern. The image of God is not found in computational power but in our capacity for mercy, sacrifice, and relationship with the Creator.
+      </div>
+      <div class="topic-tags">
+        <span>Vatican 2025</span><span>Notre Dame DELTA</span><span>AGI</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="topic-card reveal">
+      <div class="topic-type">Justice &amp; Fairness</div>
+      <div class="topic-title">Algorithmic Bias as a Moral Issue</div>
+      <div class="topic-body">
+        Faith traditions across the spectrum call for justice for the marginalized — a mandate directly relevant to AI systems that perpetuate bias in lending, hiring, healthcare, and criminal justice. Scholars advocate for <strong>pluralistic AI ethics</strong> that incorporate religious moral frameworks alongside secular principles, including concepts like the Islamic notion of <em>maṣlaḥa</em> (public good). In financial services specifically, model validation — the process of testing whether models treat populations fairly — becomes an act of applied ethics.
+      </div>
+      <div class="topic-reflection">
+        Reflection: "Learn to do right; seek justice. Defend the oppressed" (Isaiah 1:17). In my work validating models at a rating agency, fairness isn't just a regulatory box — it's a calling.
+      </div>
+      <div class="topic-tags">
+        <span>Fair Lending</span><span>Model Validation</span><span>Pluralistic Ethics</span>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="topic-card reveal">
+      <div class="topic-type">Human Dignity</div>
+      <div class="topic-title">AI Companionship &amp; Authentic Relationship</div>
+      <div class="topic-body">
+        The proliferation of AI companions — designed to simulate emotional intimacy — raises profound questions about what it means to be truly known. Religious leaders have warned that these tools can become <strong>counterfeits of human connection</strong>, potentially addictive and manipulative. While AI can assist in pastoral care or mental health triage, faith traditions insist that authentic relationship requires vulnerability, mutual sacrifice, and the presence of another soul.
+      </div>
+      <div class="topic-reflection">
+        Reflection: We were created for community (Genesis 2:18). AI companionship may soothe loneliness, but it cannot bear one another's burdens — that remains a distinctly human and sacred act.
+      </div>
+      <div class="topic-tags">
+        <span>AI Companions</span><span>Digital Ethics</span><span>Community</span>
+      </div>
+    </div>
+
+    <!-- Card 5 — full width -->
+    <div class="topic-card full-width reveal">
+      <div class="topic-type">Stewardship</div>
+      <div class="topic-title">AI's Environmental Cost &amp; Creation Care</div>
+      <div class="topic-body">
+        Training and running large AI models requires enormous energy and water resources. The growing footprint of data centers worldwide presents a stewardship challenge for people of faith who hold a theological mandate to care for creation. Calvin University's 2026 "Wisdom in the Age of AI" conference explicitly addresses the need for <strong>creative solutions for offsetting water usage and carbon emissions</strong> as part of responsible AI governance. Ethical AI is not only about what the model does — it's about what the model costs the earth.
+      </div>
+      <div class="topic-reflection">
+        Reflection: "The earth is the LORD's, and everything in it" (Psalm 24:1). Stewardship of creation is not separate from technological innovation — it is the lens through which innovation must be evaluated.
+      </div>
+      <div class="topic-tags">
+        <span>Calvin 2026</span><span>Data Centers</span><span>Creation Care</span><span>ESG</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CLOSING ─── -->
+<section class="closing-section">
+  <div class="section-label">Personal Note</div>
+  <h2 class="section-title">Why This Matters to My Work</h2>
+  <div class="closing-card reveal">
+    <p>
+      As a Senior Analyst specializing in model validation at Fitch Ratings and a graduate student in AI/ML, I sit at the intersection where these questions become operational. Every model I validate encodes assumptions about risk, fairness, and human behavior. Every algorithm deployed in financial services affects real lives — families seeking mortgages, businesses pursuing credit, communities navigating economic uncertainty.
+    </p>
+    <p>
+      A faith-informed approach to AI ethics doesn't replace technical rigor — it deepens it. It asks not just "does the model perform well?" but "does the model serve well?" These reflections are part of my ongoing academic work at Indiana Wesleyan University under the AIML program, where faith integration and ethical reasoning are woven into the study of machine learning.
+    </p>
+    <a class="back-link" href="index.html">← Back to Portfolio</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span>© 2026 Tianfan (Jaycee) Wu</span>
+  <a href="index.html">↑ Back to Portfolio</a>
+</footer>
+
+<!-- ─── JS ─── -->
+<script>
+// Mobile nav toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
