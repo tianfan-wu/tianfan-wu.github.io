@@ -474,71 +474,6 @@ section {
   letter-spacing: 0.03em;
 }
 
-/* ─── EDUCATION ─── */
-#education { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.edu-grid {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.edu-card {
-  padding: 2rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: start;
-  transition: all 0.3s;
-}
-
-.edu-card:hover {
-  border-color: var(--border-accent);
-  transform: translateY(-2px);
-}
-
-.edu-school {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-
-.edu-degree {
-  font-size: 0.92rem;
-  color: var(--text-secondary);
-  margin-top: 0.3rem;
-}
-
-.edu-detail {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-  line-height: 1.6;
-}
-
-.edu-meta {
-  text-align: right;
-}
-
-.edu-gpa {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 800;
-  background: var(--gradient-1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.edu-dates {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-top: 0.3rem;
-}
-
 /* ─── PROJECTS ─── */
 .projects-grid {
   display: grid;
@@ -801,8 +736,6 @@ footer a:hover { color: var(--accent); }
   }
   .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
   .projects-grid, .artifacts-grid { grid-template-columns: 1fr; }
-  .edu-card { grid-template-columns: 1fr; }
-  .edu-meta { text-align: left; }
   .hero { padding: 0 1.5rem; }
   section { padding: 4rem 1.5rem; }
 }
@@ -817,7 +750,6 @@ footer a:hover { color: var(--accent); }
     <li><a href="#home">Home</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
-    <li><a href="#education">Education</a></li>
     <li><a href="#artifacts">Artifacts</a></li>
     <li><a href="faith-ai-ethics.html">Faith & AI</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -916,117 +848,12 @@ footer a:hover { color: var(--accent); }
       </div>
     </div>
 
-    <div class="timeline-item reveal">
-      <div class="timeline-header">
-        <span class="timeline-role">Data Science Intern</span>
-        <span class="timeline-date">May 2022 – Aug 2022</span>
-      </div>
-      <div class="timeline-company">Psyop Production, LLC · Los Angeles, US</div>
-      <ul class="timeline-bullets">
-        <li>Backed up a 1TB+ operational database and designed ETL data pipelines, automating data refresh for 10K+ bids/week — saving 30+ hours monthly.</li>
-        <li>Visualized 50+ KPIs across 4 dashboards (30+ pages) partnering with 8 cross-functional stakeholders on sales, scheduling, and utilization tracking.</li>
-        <li>Automated operating financial models to simulate 5 offices' operation scenarios over 3 years, identifying expense-saving opportunities.</li>
-      </ul>
-      <div class="timeline-tags">
-        <span>AWS</span><span>Python</span><span>MySQL</span><span>Google Data Studio</span><span>Excel</span>
-      </div>
-    </div>
-
-    <div class="timeline-item reveal">
-      <div class="timeline-header">
-        <span class="timeline-role">Market Analyst Intern</span>
-        <span class="timeline-date">Nov 2021 – Feb 2022</span>
-      </div>
-      <div class="timeline-company">Daxue Consulting · Remote</div>
-      <ul class="timeline-bullets">
-        <li>Performed NLP on 9K+ customer reviews, summarizing 60+ keywords, identifying market trends and developing product optimization strategies.</li>
-        <li>Conducted A/B tests to verify push notification strategies, resulting in a 3% lift in app engagement rate.</li>
-        <li>Built 2 ML models (XGBoost, Factor Analysis, PCA) capturing customer purchasing patterns — improving loyalty conversion rate by 15%.</li>
-      </ul>
-      <div class="timeline-tags">
-        <span>R</span><span>NLP</span><span>XGBoost</span><span>PCA</span><span>A/B Testing</span>
-      </div>
-    </div>
-
-    <div class="timeline-item reveal">
-      <div class="timeline-header">
-        <span class="timeline-role">Financial Analyst Intern</span>
-        <span class="timeline-date">Jul 2021 – Aug 2021</span>
-      </div>
-      <div class="timeline-company">China Construction Bank · Wuhan, China</div>
-      <ul class="timeline-bullets">
-        <li>Managed daily OCF data and calculated financing ratios to prevent loan defaults and fraud risk — helping the bank avoid $2M+ financial loss.</li>
-        <li>Automated an Excel dashboard to track marketing campaign performance and QA inventory management, saving $3K+ in monthly expenses.</li>
-      </ul>
-      <div class="timeline-tags">
-        <span>MySQL</span><span>Excel</span><span>Risk Analysis</span>
-      </div>
-    </div>
-
   </div>
 </section>
-
-<!-- ─── EDUCATION ─── -->
-<section id="education">
-  <div class="section-label">03 — Education</div>
-  <h2 class="section-title">Academic Background</h2>
-  <div class="edu-grid">
-
-    <div class="edu-card reveal">
-      <div>
-        <div class="edu-school">Columbia University</div>
-        <div class="edu-degree">M.S. in Applied Analytics</div>
-        <div class="edu-detail">Data Frameworks (R), SQL, Python for Data Analysis, Managing Data (MongoDB, Spark)</div>
-      </div>
-      <div class="edu-meta">
-        <div class="edu-gpa">3.99</div>
-        <div class="edu-dates">Sep 2021 – Dec 2022</div>
-      </div>
-    </div>
-
-    <div class="edu-card reveal">
-      <div>
-        <div class="edu-school">Indiana Wesleyan University</div>
-        <div class="edu-degree">Graduate Program — AI/ML</div>
-        <div class="edu-detail">AIML-500: Machine Learning Fundamentals — currently enrolled</div>
-      </div>
-      <div class="edu-meta">
-        <div class="edu-gpa">—</div>
-        <div class="edu-dates">In Progress</div>
-      </div>
-    </div>
-
-    <div class="edu-card reveal">
-      <div>
-        <div class="edu-school">University of California, Davis</div>
-        <div class="edu-degree">Academic Exchange Program</div>
-        <div class="edu-detail">Exchange semester broadening analytical and cross-cultural academic experience.</div>
-      </div>
-      <div class="edu-meta">
-        <div class="edu-gpa">3.88</div>
-        <div class="edu-dates">Sep 2020 – Dec 2020</div>
-      </div>
-    </div>
-
-    <div class="edu-card reveal">
-      <div>
-        <div class="edu-school">Wuhan University of Technology</div>
-        <div class="edu-degree">B.S. in Financial Management</div>
-        <div class="edu-detail">Foundation in quantitative finance, statistics, and economic analysis.</div>
-      </div>
-      <div class="edu-meta">
-        <div class="edu-gpa">3.74</div>
-        <div class="edu-dates">Sep 2017 – Jun 2021</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
 
 <!-- ─── ARTIFACTS ─── -->
 <section id="artifacts">
-  <div class="section-label">04 — Artifacts</div>
+  <div class="section-label">03 — Artifacts</div>
   <h2 class="section-title">AI/ML Showcases</h2>
   <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px;">
     Interactive explorations, visual analyses, and AI-driven artifacts from coursework and independent research.
@@ -1044,7 +871,7 @@ footer a:hover { color: var(--accent); }
       <div class="artifact-tags">
         <span>SVM</span><span>CNN</span><span>DRL</span><span>Case Study</span>
       </div>
-    </div>
+      <a href="ml-vs-dl.html" class="artifact-link" style="margin-top:1rem;display:inline-block;">View Analysis →</a>
 
     <div class="artifact-card reveal">
       <div class="artifact-type">Reflection</div>
@@ -1101,7 +928,7 @@ footer a:hover { color: var(--accent); }
 
 <!-- ─── CONTACT ─── -->
 <section id="contact">
-  <div class="section-label">05 — Contact</div>
+  <div class="section-label">04 — Contact</div>
   <h2 class="section-title">Let's Connect</h2>
   <div class="contact-grid">
     <div class="contact-text">
@@ -1111,18 +938,11 @@ footer a:hover { color: var(--accent); }
       </p>
     </div>
     <div class="contact-links">
-      <a class="contact-item" href="mailto:tianfan.wu@gmail.com">
+      <a class="contact-item" href="mailto:hello@example.com">
         <span class="contact-item-icon">✉</span>
         <div>
           <div class="contact-item-label">Email</div>
-          <div class="contact-item-value">tianfan.wu@gmail.com</div>
-        </div>
-      </a>
-      <a class="contact-item" href="tel:+12063086557">
-        <span class="contact-item-icon">☎</span>
-        <div>
-          <div class="contact-item-label">Phone</div>
-          <div class="contact-item-value">206-308-6557</div>
+          <div class="contact-item-value">hello@example.com</div>
         </div>
       </a>
       <a class="contact-item" href="https://www.linkedin.com/in/tianfanwu" target="_blank">
